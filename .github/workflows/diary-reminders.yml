@@ -1,14 +1,10 @@
 name: Diary reminders
-​
 on:
   schedule:
-    # Каждые 15 минут дергаем планировщик; бот сам решит, кому пора слать.
     - cron: "*/15 * * * *"
-  workflow_dispatch: # ручной запуск из вкладки Actions для проверки
-​
+  workflow_dispatch:
 permissions:
-  id-token: write # нужен для выпуска OIDC-токена, его проверяет воркер
-​
+  id-token: write
 jobs:
   tick:
     runs-on: ubuntu-latest
@@ -20,7 +16,6 @@ jobs:
           script: |
             const token = await core.getIDToken("pbat-diary-reminders")
             core.setOutput("jwt", token)
-​
       - name: Call reminder webhook
         env:
           WEBHOOK_URL: ${{ secrets.NOTION_REMINDER_WEBHOOK }}
@@ -30,4 +25,3 @@ jobs:
             -H "Authorization: Bearer $OIDC_JWT" \
             -H "Content-Type: application/json" \
             -d '{}'
-​
