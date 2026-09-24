@@ -1,502 +1,433 @@
 <!doctype html>
 <html lang="ru">
-  <head>
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, viewport-fit=cover"
-    />
-    <meta name="color-scheme" content="light dark" />
-    <title>Сверка дня</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-      :root {
-        --canvas: var(--tg-theme-bg-color, #f6f5f2);
-        --surface: var(--tg-theme-secondary-bg-color, #ffffff);
-        --surface-soft: #eeece7;
-        --text: var(--tg-theme-text-color, #252525);
-        --muted: var(--tg-theme-hint-color, #77736d);
-        --border: rgba(37, 37, 37, 0.1);
-        --accent: var(--tg-theme-button-color, #2783de);
-        --accent-text: var(--tg-theme-button-text-color, #ffffff);
-        --track: #dcd9d3;
-        --success: #3f956a;
-        --shadow: 0 1px 2px rgba(0, 0, 0, 0.04),
-          0 8px 24px rgba(32, 28, 20, 0.05);
-      }
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <title>Сверка момента</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <style>
+    :root {
+      --canvas: var(--tg-theme-bg-color, #f4f4f3);
+      --surface: var(--tg-theme-secondary-bg-color, #ffffff);
+      --raised: #ececea;
+      --border: #dededb;
+      --text: var(--tg-theme-text-color, #202020);
+      --muted: var(--tg-theme-hint-color, #6f6f6b);
+      --accent: var(--app-accent, var(--tg-theme-button-color, #111111));
+      --accent-contrast: var(--app-accent-contrast, var(--tg-theme-button-text-color, #ffffff));
+      --success: #3f956a;
+      --safe-bottom: max(18px, env(safe-area-inset-bottom));
+    }
 
-      @media (prefers-color-scheme: dark) {
-        :root {
-          --canvas: var(--tg-theme-bg-color, #191919);
-          --surface: var(--tg-theme-secondary-bg-color, #242423);
-          --surface-soft: #323230;
-          --text: var(--tg-theme-text-color, #ffffff);
-          --muted: var(--tg-theme-hint-color, rgba(255, 255, 255, 0.63));
-          --border: rgba(255, 255, 255, 0.12);
-          --accent: var(--tg-theme-button-color, #5e9fe8);
-          --accent-text: var(--tg-theme-button-text-color, #ffffff);
-          --track: #484845;
-          --success: #72bc8f;
-          --shadow: none;
-        }
-      }
+    * { box-sizing: border-box; }
 
-      * {
-        box-sizing: border-box;
-      }
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+    }
 
-      html {
-        background: var(--canvas);
-      }
+    body {
+      background: var(--canvas);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      font-size: 16px;
+      line-height: 1.45;
+      -webkit-font-smoothing: antialiased;
+    }
 
+    button,
+    input {
+      font: inherit;
+    }
+
+    .app {
+      width: min(100%, 430px);
+      height: 100dvh;
+      margin: 0 auto;
+      overflow-y: auto;
+      background: var(--surface);
+      padding: 24px 20px calc(96px + var(--safe-bottom));
+    }
+
+    .header {
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      margin: 0 0 10px;
+      font-size: 30px;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+    }
+
+    .intro {
+      max-width: 370px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.5;
+    }
+
+    .measure-list {
+      display: grid;
+      gap: 12px;
+    }
+
+    .measure {
+      --fill: 50%;
+      padding: 18px 16px 15px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      background: var(--surface);
+      transition: border-color 160ms ease;
+    }
+
+    .measure.touched {
+      border-color: color-mix(in srgb, var(--accent) 42%, var(--border));
+    }
+
+    .measure-head {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 14px;
+      align-items: start;
+      min-height: 62px;
+    }
+
+    .measure-title {
+      margin: 0 0 4px;
+      font-size: 17px;
+      font-weight: 750;
+      letter-spacing: -0.012em;
+    }
+
+    .measure-question {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.4;
+    }
+
+    .value {
+      min-width: 40px;
+      margin-top: -2px;
+      color: var(--muted);
+      font-size: 22px;
+      font-weight: 760;
+      line-height: 1.2;
+      text-align: right;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .measure.touched .value {
+      color: var(--accent);
+    }
+
+    input[type="range"] {
+      width: 100%;
+      height: 36px;
+      margin: 8px 0 0;
+      appearance: none;
+      -webkit-appearance: none;
+      background: transparent;
+      cursor: pointer;
+      touch-action: pan-y;
+    }
+
+    input[type="range"]::-webkit-slider-runnable-track {
+      height: 7px;
+      border-radius: 7px;
+      background:
+        linear-gradient(
+          to right,
+          var(--accent) 0,
+          var(--accent) var(--fill),
+          var(--raised) var(--fill),
+          var(--raised) 100%
+        );
+    }
+
+    input[type="range"]::-moz-range-track {
+      height: 7px;
+      border-radius: 7px;
+      background: var(--raised);
+    }
+
+    input[type="range"]::-moz-range-progress {
+      height: 7px;
+      border-radius: 7px;
+      background: var(--accent);
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      width: 26px;
+      height: 26px;
+      margin-top: -9.5px;
+      appearance: none;
+      -webkit-appearance: none;
+      border: 3px solid var(--surface);
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.22);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 22px;
+      height: 22px;
+      border: 3px solid var(--surface);
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 1px 5px rgba(0, 0, 0, 0.22);
+    }
+
+    .measure:not(.touched) input[type="range"]::-webkit-slider-runnable-track {
+      background: var(--raised);
+    }
+
+    .measure:not(.touched) input[type="range"]::-moz-range-progress {
+      background: var(--raised);
+    }
+
+    .measure:not(.touched) input[type="range"]::-webkit-slider-thumb {
+      border: 2px solid var(--border);
+      background: var(--surface);
+      box-shadow: none;
+    }
+
+    .measure:not(.touched) input[type="range"]::-moz-range-thumb {
+      border: 2px solid var(--border);
+      background: var(--surface);
+      box-shadow: none;
+    }
+
+    input[type="range"]:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--accent) 28%, transparent);
+      outline-offset: 2px;
+      border-radius: 8px;
+    }
+
+    .anchors {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: -2px;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.3;
+    }
+
+    .anchors span:last-child {
+      text-align: right;
+    }
+
+    .footer {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      z-index: 5;
+      width: min(100%, 430px);
+      transform: translateX(-50%);
+      padding: 14px 20px var(--safe-bottom);
+      background:
+        linear-gradient(
+          to top,
+          var(--surface) 76%,
+          color-mix(in srgb, var(--surface) 0%, transparent)
+        );
+    }
+
+    .send {
+      width: 100%;
+      min-height: 54px;
+      border: 0;
+      border-radius: 12px;
+      background: var(--accent);
+      color: var(--accent-contrast);
+      font-size: 16px;
+      font-weight: 760;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+      transition: opacity 140ms ease, transform 140ms ease;
+    }
+
+    .send:active:not(:disabled) {
+      transform: translateY(1px);
+    }
+
+    .send:focus-visible {
+      outline: 3px solid color-mix(in srgb, var(--accent) 28%, transparent);
+      outline-offset: 3px;
+    }
+
+    .send:disabled {
+      cursor: not-allowed;
+      background: var(--raised);
+      color: var(--muted);
+      opacity: 0.82;
+    }
+
+    .success {
+      min-height: calc(100dvh - 48px - var(--safe-bottom));
+      display: grid;
+      place-items: center;
+      padding-bottom: 34px;
+      text-align: center;
+    }
+
+    .success[hidden] {
+      display: none;
+    }
+
+    .success-mark {
+      width: 66px;
+      height: 66px;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 22px;
+      border: 1px solid color-mix(in srgb, var(--success) 30%, transparent);
+      border-radius: 20px;
+      background: color-mix(in srgb, var(--success) 11%, transparent);
+      color: var(--success);
+      box-shadow: 0 10px 34px color-mix(in srgb, var(--success) 12%, transparent);
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1;
+    }
+
+    .success h2 {
+      margin: 0 0 8px;
+      font-size: 31px;
+      line-height: 1.08;
+      letter-spacing: -0.035em;
+    }
+
+    .success p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    @media (min-width: 720px) {
       body {
-        margin: 0;
-        min-height: 100vh;
-        min-height: 100dvh;
-        color: var(--text);
-        background:
-          radial-gradient(
-            circle at 94% -8%,
-            color-mix(in srgb, var(--accent) 12%, transparent) 0,
-            transparent 31%
-          ),
-          var(--canvas);
-        font-family:
-          -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
-        font-size: 16px;
-        line-height: 1.45;
-        -webkit-font-smoothing: antialiased;
-      }
-
-      button,
-      input {
-        font: inherit;
+        padding: 24px 0;
       }
 
       .app {
-        width: min(100%, 560px);
-        margin: 0 auto;
-        padding:
-          calc(22px + env(safe-area-inset-top))
-          16px
-          calc(24px + env(safe-area-inset-bottom));
-      }
-
-      .header {
-        display: grid;
-        grid-template-columns: 44px 1fr;
-        gap: 12px;
-        align-items: center;
-        margin-bottom: 24px;
-      }
-
-      .mark {
-        position: relative;
-        width: 44px;
-        height: 44px;
+        height: min(820px, calc(100dvh - 48px));
         border: 1px solid var(--border);
-        border-radius: 12px;
-        background: var(--surface);
-        box-shadow: var(--shadow);
+        border-radius: 24px;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04), 0 10px 28px rgba(0, 0, 0, 0.05);
       }
+    }
 
-      .mark::before,
-      .mark::after {
-        position: absolute;
-        left: 50%;
-        content: "";
-        background: var(--accent);
-        transform: translateX(-50%);
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --canvas: var(--tg-theme-bg-color, #171717);
+        --surface: var(--tg-theme-secondary-bg-color, #202020);
+        --raised: #383837;
+        --border: #494948;
+        --text: var(--tg-theme-text-color, #f7f7f5);
+        --muted: var(--tg-theme-hint-color, #aaa9a5);
+        --accent: var(--app-accent, var(--tg-theme-button-color, #ffffff));
+        --accent-contrast: var(--app-accent-contrast, var(--tg-theme-button-text-color, #111111));
+        --success: #72bc8f;
       }
+    }
 
-      .mark::before {
-        top: 9px;
-        width: 0;
-        height: 0;
-        border-right: 6px solid transparent;
-        border-bottom: 13px solid var(--accent);
-        border-left: 6px solid transparent;
-        background: transparent;
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
       }
-
-      .mark::after {
-        top: 20px;
-        width: 3px;
-        height: 15px;
-        border-radius: 3px;
-      }
-
-      .eyebrow {
-        margin: 0 0 2px;
-        color: var(--muted);
-        font-size: 14px;
-        font-weight: 600;
-        letter-spacing: 0.02em;
-      }
-
-      h1 {
-        margin: 0;
-        font-size: clamp(28px, 8vw, 34px);
-        line-height: 1.12;
-        letter-spacing: -0.035em;
-      }
-
-      .intro {
-        margin: -8px 0 20px;
-        color: var(--muted);
-        font-size: 15px;
-      }
-
-      .list {
-        display: grid;
-        gap: 12px;
-      }
-
-      .metric {
-        --value: 50%;
-        padding: 16px;
-        border: 1px solid var(--border);
-        border-radius: 12px;
-        background: var(--surface);
-        box-shadow: var(--shadow);
-      }
-
-      .metric-top {
-        display: grid;
-        grid-template-columns: 1fr auto;
-        gap: 12px;
-        align-items: start;
-      }
-
-      .metric-name {
-        margin: 0 0 4px;
-        color: var(--muted);
-        font-size: 14px;
-        font-weight: 650;
-      }
-
-      .metric-question {
-        margin: 0;
-        max-width: 38ch;
-        font-size: 16px;
-        font-weight: 600;
-        line-height: 1.35;
-      }
-
-      output {
-        min-width: 48px;
-        padding: 6px 8px;
-        border: 1px solid
-          color-mix(in srgb, var(--accent) 28%, transparent);
-        border-radius: 8px;
-        color: var(--accent);
-        background: color-mix(in srgb, var(--accent) 9%, transparent);
-        font-size: 18px;
-        font-variant-numeric: tabular-nums;
-        font-weight: 750;
-        line-height: 1;
-        text-align: center;
-      }
-
-      input[type="range"] {
-        width: 100%;
-        height: 44px;
-        margin: 8px 0 0;
-        appearance: none;
-        -webkit-appearance: none;
-        cursor: pointer;
-        background: transparent;
-      }
-
-      input[type="range"]::-webkit-slider-runnable-track {
-        height: 6px;
-        border-radius: 999px;
-        background: linear-gradient(
-          to right,
-          var(--accent) 0 var(--value),
-          var(--track) var(--value) 100%
-        );
-      }
-
-      input[type="range"]::-moz-range-track {
-        height: 6px;
-        border-radius: 999px;
-        background: var(--track);
-      }
-
-      input[type="range"]::-moz-range-progress {
-        height: 6px;
-        border-radius: 999px;
-        background: var(--accent);
-      }
-
-      input[type="range"]::-webkit-slider-thumb {
-        width: 24px;
-        height: 24px;
-        margin-top: -9px;
-        appearance: none;
-        -webkit-appearance: none;
-        border: 3px solid var(--surface);
-        border-radius: 50%;
-        background: var(--accent);
-        box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 52%, transparent);
-      }
-
-      input[type="range"]::-moz-range-thumb {
-        width: 20px;
-        height: 20px;
-        border: 3px solid var(--surface);
-        border-radius: 50%;
-        background: var(--accent);
-        box-shadow: 0 0 0 1px color-mix(in srgb, var(--accent) 52%, transparent);
-      }
-
-      input[type="range"]:focus-visible {
-        outline: 3px solid color-mix(in srgb, var(--accent) 28%, transparent);
-        outline-offset: 2px;
-        border-radius: 8px;
-      }
-
-      .anchors {
-        display: flex;
-        justify-content: space-between;
-        gap: 16px;
-        margin-top: -3px;
-        color: var(--muted);
-        font-size: 12px;
-      }
-
-      .footer {
-        margin: 18px -4px 0;
-        padding: 6px 4px 0;
-      }
-
-      .note {
-        margin: 0 0 12px;
-        color: var(--muted);
-        font-size: 13px;
-        text-align: center;
-      }
-
-      .submit {
-        width: 100%;
-        min-height: 52px;
-        border: 0;
-        border-radius: 12px;
-        color: var(--accent-text);
-        background: var(--accent);
-        font-size: 16px;
-        font-weight: 700;
-        box-shadow: 0 8px 20px color-mix(in srgb, var(--accent) 22%, transparent);
-        cursor: pointer;
-        transition:
-          transform 130ms ease,
-          opacity 130ms ease;
-      }
-
-      .submit:active {
-        transform: scale(0.985);
-      }
-
-      .submit:disabled {
-        cursor: wait;
-        opacity: 0.62;
-      }
-
-      .success {
-        display: none;
-        min-height: calc(100vh - 64px);
-        min-height: calc(100dvh - 64px);
-        place-items: center;
-        text-align: center;
-      }
-
-      .success.is-visible {
-        display: grid;
-      }
-
-      .success-mark {
-        display: grid;
-        width: 68px;
-        height: 68px;
-        margin: 0 auto 20px;
-        place-items: center;
-        border: 1px solid color-mix(in srgb, var(--success) 28%, transparent);
-        border-radius: 20px;
-        color: var(--success);
-        background: color-mix(in srgb, var(--success) 11%, transparent);
-        font-size: 32px;
-        font-weight: 800;
-      }
-
-      .success h2 {
-        margin: 0 0 8px;
-        font-size: 28px;
-        letter-spacing: -0.025em;
-      }
-
-      .success p {
-        margin: 0;
-        color: var(--muted);
-      }
-
-      @media (min-width: 720px) {
-        .app {
-          padding-top: 40px;
-          padding-bottom: 40px;
-        }
-      }
-
-      @media (prefers-reduced-motion: reduce) {
-        *,
-        *::before,
-        *::after {
-          scroll-behavior: auto !important;
-          transition: none !important;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <main class="app">
-      <section id="form-view">
-        <header class="header">
-          <div class="mark" aria-hidden="true"></div>
-          <div>
-            <p class="eyebrow">За последние 24 часа</p>
-            <h1>Сверка дня</h1>
-          </div>
-        </header>
-
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <form id="moment-form">
+      <header class="header">
+        <h1>Сверка момента</h1>
         <p class="intro">
-          Отметь, насколько каждое утверждение совпадает с твоим опытом.
+          Вспомни последнюю заметную ситуацию, когда захотелось отреагировать сразу.
         </p>
+      </header>
 
-        <form id="checkin-form">
-          <div class="list">
-            <article class="metric">
-              <div class="metric-top">
-                <div>
-                  <p class="metric-name">Контакт с моментом</p>
-                  <p class="metric-question" id="q-contact">
-                    Мне было трудно соприкасаться с моментами своей жизни
-                  </p>
-                </div>
-                <output for="contact" id="v-contact">50</output>
-              </div>
-              <input
-                id="contact"
-                name="contactDifficulty"
-                type="range"
-                min="0"
-                max="100"
-                step="1"
-                value="50"
-                aria-labelledby="q-contact"
-              />
-              <div class="anchors" aria-hidden="true">
-                <span>Совсем нет</span><span>Полностью</span>
-              </div>
-            </article>
-
-            <article class="metric">
-              <div class="metric-top">
-                <div>
-                  <p class="metric-name">Гибкость поведения</p>
-                  <p class="metric-question" id="q-stuck">
-                    Я застревал и не мог изменить неработающее поведение
-                  </p>
-                </div>
-                <output for="stuck" id="v-stuck">50</output>
-              </div>
-              <input
-                id="stuck"
-                name="stuckBehavior"
-                type="range"
-                min="0"
-                max="100"
-                step="1"
-                value="50"
-                aria-labelledby="q-stuck"
-              />
-              <div class="anchors" aria-hidden="true">
-                <span>Совсем нет</span><span>Полностью</span>
-              </div>
-            </article>
-
-            <article class="metric">
-              <div class="metric-top">
-                <div>
-                  <p class="metric-name">Личный выбор</p>
-                  <p class="metric-question" id="q-values">
-                    Я выбирал то, что лично для меня важно
-                  </p>
-                </div>
-                <output for="values" id="v-values">50</output>
-              </div>
-              <input
-                id="values"
-                name="valuesChoice"
-                type="range"
-                min="0"
-                max="100"
-                step="1"
-                value="50"
-                aria-labelledby="q-values"
-              />
-              <div class="anchors" aria-hidden="true">
-                <span>Совсем нет</span><span>Полностью</span>
-              </div>
-            </article>
-
-            <article class="metric">
-              <div class="metric-top">
-                <div>
-                  <p class="metric-name">Витальность</p>
-                  <p class="metric-question" id="q-vitality">
-                    Я чувствовал себя живым и энергичным
-                  </p>
-                </div>
-                <output for="vitality" id="v-vitality">50</output>
-              </div>
-              <input
-                id="vitality"
-                name="vitality"
-                type="range"
-                min="0"
-                max="100"
-                step="1"
-                value="50"
-                aria-labelledby="q-vitality"
-              />
-              <div class="anchors" aria-hidden="true">
-                <span>Совсем нет</span><span>Полностью</span>
-              </div>
-            </article>
+      <section class="measure-list" aria-label="Оценка выбранной ситуации">
+        <article class="measure" data-measure="command">
+          <div class="measure-head">
+            <div>
+              <p class="measure-title">Сила желания</p>
+              <p class="measure-question">Насколько сильным было желание?</p>
+            </div>
+            <output class="value" id="value-command" for="command">—</output>
           </div>
 
-          <footer class="footer">
-            <p class="note">0 — совсем не согласен · 100 — полностью согласен</p>
-            <button class="submit" id="submit" type="submit">
-              Сохранить отметку
-            </button>
-          </footer>
-        </form>
+          <input
+            id="command"
+            name="command"
+            type="range"
+            min="0"
+            max="10"
+            step="0.5"
+            value="5"
+            aria-label="Сила желания: от почти не тянуло до как приказ"
+          />
+
+          <div class="anchors" aria-hidden="true">
+            <span>Почти не тянуло</span>
+            <span>Как приказ</span>
+          </div>
+        </article>
+
+        <article class="measure" data-measure="choice">
+          <div class="measure-head">
+            <div>
+              <p class="measure-title">Личный выбор</p>
+              <p class="measure-question">Что определило твой следующий шаг?</p>
+            </div>
+            <output class="value" id="value-choice" for="choice">—</output>
+          </div>
+
+          <input
+            id="choice"
+            name="choice"
+            type="range"
+            min="0"
+            max="10"
+            step="0.5"
+            value="5"
+            aria-label="Источник следующего шага: от надо сейчас до моего выбора"
+          />
+
+          <div class="anchors" aria-hidden="true">
+            <span>На автомате</span>
+            <span>Мой выбор</span>
+          </div>
+        </article>
       </section>
 
-      <section class="success" id="success-view" aria-live="polite">
-        <div>
-          <div class="success-mark" aria-hidden="true">✓</div>
-          <h2>Отметка сохранена</h2>
-          <p>Можно возвращаться в Telegram.</p>
-        </div>
-      </section>
-    </main>
+      <footer class="footer">
+        <button class="send" id="send" type="submit" disabled>Отправить</button>
+      </footer>
+    </form>
 
-    <script>
+    <section class="success" id="success" hidden aria-live="polite">
+      <div>
+        <div class="success-mark" aria-hidden="true">✓</div>
+        <h2>Отметка отправлена</h2>
+        <p>Можно возвращаться в Telegram.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (() => {
       const tg = window.Telegram?.WebApp;
-      const submitUrl =
-        "https://app.notion.com/webhooks/worker/09565f83-953a-40af-a7e6-84448d2d71db/01a0cab3-b06e-7ca8-9748-7df44db37aa1/hmeSFjx_CM2tPVXx/telegramIncoming";
+      const params = new URLSearchParams(window.location.search);
+      const accentParam = params.get("accent");
+      const submitUrl = "https://app.notion.com/webhooks/worker/09565f83-953a-40af-a7e6-84448d2d71db/01a0cab3-b06e-7ca8-9748-7df44db37aa1/hmeSFjx_CM2tPVXx/telegramIncoming";
       const submissionId =
         window.crypto?.randomUUID?.() ??
         `${Date.now()}-${Math.random().toString(36).slice(2)}`;
@@ -504,59 +435,89 @@
       tg?.ready();
       tg?.expand();
 
-      const inputs = [...document.querySelectorAll('input[type="range"]')];
-      const form = document.getElementById("checkin-form");
-      const submit = document.getElementById("submit");
-      const formView = document.getElementById("form-view");
-      const successView = document.getElementById("success-view");
+      function applyAccent(value) {
+        if (!value) return;
+        const raw = value.startsWith("#") ? value : `#${value}`;
+        if (!/^#[0-9a-f]{6}$/i.test(raw)) return;
+
+        const r = parseInt(raw.slice(1, 3), 16);
+        const g = parseInt(raw.slice(3, 5), 16);
+        const b = parseInt(raw.slice(5, 7), 16);
+        const luminance = (0.2126 * r + 0.7152 * g + 0.0722 * b) / 255;
+
+        document.documentElement.style.setProperty("--app-accent", raw);
+        document.documentElement.style.setProperty(
+          "--app-accent-contrast",
+          luminance > 0.58 ? "#111111" : "#ffffff"
+        );
+      }
+
+      applyAccent(accentParam);
+
+      const state = {
+        command: null,
+        choice: null
+      };
+
+      const send = document.getElementById("send");
+      const form = document.getElementById("moment-form");
+      const success = document.getElementById("success");
+
+      function formatValue(value) {
+        return Number.isInteger(value) ? String(value) : value.toFixed(1);
+      }
+
+      function updateSubmit() {
+        send.disabled = state.command === null || state.choice === null;
+      }
 
       function showSuccess() {
-        formView.hidden = true;
-        successView.classList.add("is-visible");
+        form.hidden = true;
+        success.hidden = false;
       }
 
-      if (new URLSearchParams(window.location.search).get("state") === "success") {
-        showSuccess();
+      function showError() {
+        send.disabled = false;
+        send.removeAttribute("aria-busy");
+        send.textContent = "Повторить";
       }
 
-      function paint(input) {
-        const value = Number(input.value);
-        input.style.setProperty("--value", `${value}%`);
-        input.closest(".metric").style.setProperty("--value", `${value}%`);
-        document.getElementById(`v-${input.id}`).value = value;
-      }
+      document.querySelectorAll('input[type="range"]').forEach((input) => {
+        input.addEventListener("input", () => {
+          const value = Number(input.value);
+          const card = input.closest(".measure");
 
-      inputs.forEach((input) => {
-        paint(input);
-        input.addEventListener("input", () => paint(input));
-        input.addEventListener("change", () =>
-          tg?.HapticFeedback?.selectionChanged()
-        );
+          state[input.name] = value;
+          card.classList.add("touched");
+          card.style.setProperty("--fill", `${value * 10}%`);
+          document.getElementById(`value-${input.name}`).textContent = formatValue(value);
+
+          updateSubmit();
+        });
       });
 
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
-        submit.disabled = true;
-        submit.textContent = "Сохраняю…";
+        if (send.disabled) return;
 
         const payload = {
           version: 1,
+          formCode: "psychological-flexibility-daily",
+          formVersion: 1,
           kind: "pbat_checkin",
-          timeframe: "last_24_hours",
+          timeframe: "last_noticeable_moment",
           submittedAt: new Date().toISOString(),
           timeZone:
-            Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Moscow",
+            Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Prague",
           values: {
-            contactDifficulty: Number(
-              document.getElementById("contact").value
-            ),
-            stuckBehavior: Number(document.getElementById("stuck").value),
-            valuesChoice: Number(document.getElementById("values").value),
-            vitality: Number(document.getElementById("vitality").value),
-          },
+            command_strength: state.command,
+            personal_choice: state.choice
+          }
         };
 
-        tg?.HapticFeedback?.notificationOccurred("success");
+        send.disabled = true;
+        send.setAttribute("aria-busy", "true");
+        send.textContent = "Отправляем…";
 
         try {
           if (!tg?.initData) {
@@ -569,27 +530,42 @@
             credentials: "omit",
             cache: "no-store",
             headers: {
-              "Content-Type": "text/plain;charset=UTF-8",
+              "Content-Type": "text/plain;charset=UTF-8"
             },
             body: JSON.stringify({
               source: "mini_app",
               initData: tg.initData,
               submissionId,
-              payload,
-            }),
+              payload
+            })
           });
 
+          tg?.HapticFeedback?.notificationOccurred("success");
           showSuccess();
         } catch (error) {
           console.error(error);
-          submit.disabled = false;
-          submit.textContent = "Повторить отправку";
+          showError();
           tg?.HapticFeedback?.notificationOccurred("error");
           tg?.showAlert?.(
             "Не удалось отправить отметку. Проверь соединение и попробуй ещё раз."
           );
         }
       });
-    </script>
-  </body>
+
+      if (params.get("populate") === "1") {
+        const demo = { command: 7.5, choice: 7 };
+
+        Object.entries(demo).forEach(([name, value]) => {
+          const input = document.getElementById(name);
+          input.value = value;
+          input.dispatchEvent(new Event("input", { bubbles: true }));
+        });
+      }
+
+      if (params.get("submitted") === "1") {
+        showSuccess();
+      }
+    })();
+  </script>
+</body>
 </html>
