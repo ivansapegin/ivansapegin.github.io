@@ -48,7 +48,7 @@
       margin: 0 auto;
       overflow-y: auto;
       background: var(--surface);
-      padding: 24px 20px calc(96px + var(--safe-bottom));
+      padding: 24px 20px calc(20px + var(--safe-bottom));
     }
 
     .header {
@@ -223,19 +223,8 @@
     }
 
     .footer {
-      position: fixed;
-      left: 50%;
-      bottom: 0;
-      z-index: 5;
-      width: min(100%, 430px);
-      transform: translateX(-50%);
-      padding: 14px 20px var(--safe-bottom);
-      background:
-        linear-gradient(
-          to top,
-          var(--surface) 76%,
-          color-mix(in srgb, var(--surface) 0%, transparent)
-        );
+      margin-top: 16px;
+      padding: 0 0 var(--safe-bottom);
     }
 
     .send {
