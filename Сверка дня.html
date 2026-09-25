@@ -617,6 +617,7 @@
 
           tg?.HapticFeedback?.notificationOccurred("success");
           showSuccess();
+          // Keep the confirmation visible briefly before returning to Telegram.
           window.setTimeout(() => tg?.close?.(), 1300);
         } catch (error) {
           console.error(error);
