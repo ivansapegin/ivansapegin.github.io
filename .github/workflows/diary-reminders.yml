@@ -64,7 +64,7 @@ jobs:
             fi
 
             case "$status" in
-              000|408|425|429|5??)
+              000|404|408|425|429|5??)
                 if [[ "$attempt" -lt 3 ]]; then
                   sleep $((attempt * 10))
                   continue
