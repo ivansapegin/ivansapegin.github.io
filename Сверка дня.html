@@ -408,7 +408,7 @@
       </section>
 
       <footer class="footer">
-        <button class="send" id="send" type="submit" disabled>Отправить</button>
+        <button class="send" id="send" type="submit">Отправить</button>
       </footer>
     </form>
 
@@ -491,7 +491,10 @@
 
       applyAccent(accentParam);
 
-      const state = { command: null, choice: null };
+      const state = {
+        command: Number(document.getElementById("command").value),
+        choice: Number(document.getElementById("choice").value)
+      };
       const inputByMetric = {
         command_strength: "command",
         personal_choice: "choice"
