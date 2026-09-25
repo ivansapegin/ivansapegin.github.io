@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
   <meta name="color-scheme" content="light dark" />
   <title>Сверка момента</title>
-  <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
       --canvas: var(--tg-theme-bg-color, #f4f4f3);
@@ -48,7 +47,7 @@
       margin: 0 auto;
       overflow-y: auto;
       background: var(--surface);
-      padding: 24px 20px calc(20px + var(--safe-bottom));
+      padding: 24px 20px calc(96px + var(--safe-bottom));
     }
 
     .header {
@@ -223,8 +222,19 @@
     }
 
     .footer {
-      margin-top: 16px;
-      padding: 0 0 var(--safe-bottom);
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      z-index: 5;
+      width: min(100%, 430px);
+      transform: translateX(-50%);
+      padding: 14px 20px var(--safe-bottom);
+      background:
+        linear-gradient(
+          to top,
+          var(--surface) 76%,
+          color-mix(in srgb, var(--surface) 0%, transparent)
+        );
     }
 
     .send {
@@ -406,13 +416,51 @@
       <div>
         <div class="success-mark" aria-hidden="true">✓</div>
         <h2>Отметка отправлена</h2>
-        <p>Можно возвращаться в Telegram.</p>
+        <p>Вернись в Telegram — бот подтвердит сохранение.</p>
       </div>
     </section>
   </main>
 
   <script>
     (() => {
+      const FORM_DEFINITION = {
+        schemaVersion: 2,
+        id: "psychological-flexibility-daily",
+        version: "1",
+        focus: {
+          id: "psychological-flexibility",
+          label: "Психологическая гибкость"
+        },
+        entryType: "scales",
+        timeframe: "last_noticeable_moment",
+        metrics: [
+          {
+            id: "command_strength",
+            type: "scale",
+            label: "Сила желания",
+            prompt: "Насколько сильным было желание?",
+            min: 0,
+            max: 10,
+            step: 0.5,
+            construct: "urge_strength",
+            direction: "higher_means_stronger_urge",
+            anchors: { min: "Почти не тянуло", max: "Как приказ" }
+          },
+          {
+            id: "personal_choice",
+            type: "scale",
+            label: "Личный выбор",
+            prompt: "Что определило твой следующий шаг?",
+            min: 0,
+            max: 10,
+            step: 0.5,
+            construct: "values_based_choice",
+            direction: "higher_means_more_choice",
+            anchors: { min: "На автомате", max: "Мой выбор" }
+          }
+        ]
+      };
+
       const tg = window.Telegram?.WebApp;
       const params = new URLSearchParams(window.location.search);
       const accentParam = params.get("accent");
@@ -443,11 +491,11 @@
 
       applyAccent(accentParam);
 
-      const state = {
-        command: null,
-        choice: null
+      const state = { command: null, choice: null };
+      const inputByMetric = {
+        command_strength: "command",
+        personal_choice: "choice"
       };
-
       const send = document.getElementById("send");
       const form = document.getElementById("moment-form");
       const success = document.getElementById("success");
@@ -479,30 +527,51 @@
           state[input.name] = value;
           card.classList.add("touched");
           card.style.setProperty("--fill", `${value * 10}%`);
-          document.getElementById(`value-${input.name}`).textContent = formatValue(value);
-
+          document.getElementById(`value-${input.name}`).textContent =
+            formatValue(value);
           updateSubmit();
         });
       });
 
+      function buildPayload() {
+        const responses = FORM_DEFINITION.metrics.map((metric) => {
+          const inputId = inputByMetric[metric.id];
+          const value = Number(document.getElementById(inputId).value);
+          return {
+            id: metric.id,
+            type: metric.type,
+            label: metric.label,
+            prompt: metric.prompt,
+            value,
+            min: metric.min,
+            max: metric.max,
+            step: metric.step,
+            construct: metric.construct,
+            direction: metric.direction,
+            anchors: metric.anchors
+          };
+        });
+
+        return {
+          schemaVersion: FORM_DEFINITION.schemaVersion,
+          kind: "pbat_checkin",
+          form: {
+            id: FORM_DEFINITION.id,
+            version: FORM_DEFINITION.version,
+            focus: FORM_DEFINITION.focus
+          },
+          entryType: FORM_DEFINITION.entryType,
+          timeframe: FORM_DEFINITION.timeframe,
+          submittedAt: new Date().toISOString(),
+          timeZone:
+            Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Rome",
+          responses
+        };
+      }
+
       form.addEventListener("submit", async (event) => {
         event.preventDefault();
         if (send.disabled) return;
-
-        const payload = {
-          version: 1,
-          formCode: "psychological-flexibility-daily",
-          formVersion: 1,
-          kind: "pbat_checkin",
-          timeframe: "last_noticeable_moment",
-          submittedAt: new Date().toISOString(),
-          timeZone:
-            Intl.DateTimeFormat().resolvedOptions().timeZone || "Europe/Prague",
-          values: {
-            command_strength: state.command,
-            personal_choice: state.choice
-          }
-        };
 
         send.disabled = true;
         send.setAttribute("aria-busy", "true");
@@ -513,21 +582,33 @@
             throw new Error("Telegram initData is unavailable");
           }
 
-          await fetch(submitUrl, {
-            method: "POST",
-            mode: "no-cors",
-            credentials: "omit",
-            cache: "no-store",
-            headers: {
-              "Content-Type": "text/plain;charset=UTF-8"
-            },
-            body: JSON.stringify({
-              source: "mini_app",
-              initData: tg.initData,
-              submissionId,
-              payload
-            })
-          });
+          const payload = buildPayload();
+          window.dispatchEvent(
+            new CustomEvent("moment-check-submit", { detail: payload })
+          );
+
+          const controller = new AbortController();
+          const timeout = window.setTimeout(() => controller.abort(), 15000);
+          try {
+            await fetch(submitUrl, {
+              method: "POST",
+              mode: "no-cors",
+              credentials: "omit",
+              cache: "no-store",
+              signal: controller.signal,
+              headers: {
+                "Content-Type": "text/plain;charset=UTF-8"
+              },
+              body: JSON.stringify({
+                source: "mini_app",
+                initData: tg.initData,
+                submissionId,
+                payload
+              })
+            });
+          } finally {
+            window.clearTimeout(timeout);
+          }
 
           tg?.HapticFeedback?.notificationOccurred("success");
           showSuccess();
@@ -541,9 +622,14 @@
         }
       });
 
+      window.MomentCheck = {
+        success: showSuccess,
+        error: showError,
+        buildPayload
+      };
+
       if (params.get("populate") === "1") {
         const demo = { command: 7.5, choice: 7 };
-
         Object.entries(demo).forEach(([name, value]) => {
           const input = document.getElementById(name);
           input.value = value;
@@ -551,9 +637,7 @@
         });
       }
 
-      if (params.get("submitted") === "1") {
-        showSuccess();
-      }
+      if (params.get("submitted") === "1") showSuccess();
     })();
   </script>
 </body>
