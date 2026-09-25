@@ -617,6 +617,7 @@
 
           tg?.HapticFeedback?.notificationOccurred("success");
           showSuccess();
+          window.setTimeout(() => tg?.close?.(), 1300);
         } catch (error) {
           console.error(error);
           showError();
