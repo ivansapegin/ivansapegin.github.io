@@ -1,9 +1,5 @@
 name: Diary reminders
 on:
-  schedule:
-    # Run away from the top of the hour, where GitHub cron is busiest.
-    # A 30-minute cadence balances timely reminders with Worker credit use.
-    - cron: "7,37 * * * *"
   workflow_dispatch:
 permissions:
   contents: read
