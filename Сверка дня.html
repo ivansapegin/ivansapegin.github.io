@@ -1,4 +1,5 @@
 <!doctype html>
+<!-- True North Diary · psychological-flexibility-daily@2 -->
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
@@ -351,74 +352,74 @@
       <header class="header">
         <h1>Дневник</h1>
         <p class="intro">
-          Вспомни последнюю заметную ситуацию, когда захотелось отреагировать сразу.
+          Заметь, что происходит прямо сейчас. Понаблюдай за импульсом, прежде чем начать действовать.
         </p>
       </header>
 
-      <section class="measure-list" aria-label="Оценка выбранной ситуации">
-        <article class="measure" data-measure="command">
+      <section class="measure-list" aria-label="Наблюдение текущего момента">
+        <article class="measure" data-measure="pull">
           <div class="measure-head">
             <div>
-              <p class="measure-title">Сила желания</p>
-              <p class="measure-question">Насколько сильным было желание?</p>
+              <p class="measure-title">Сила импульса</p>
+              <p class="measure-question">Как сильно хочется следовать за импульсом?</p>
             </div>
-            <output class="value" id="value-command" for="command">—</output>
+            <output class="value" id="value-pull" for="pull">—</output>
           </div>
 
           <input
-            id="command"
-            name="command"
+            id="pull"
+            name="pull"
             type="range"
             min="0"
             max="10"
-            step="0.5"
+            step="1"
             value="5"
-            aria-label="Сила желания: от почти не тянуло до как приказ"
+            aria-label="Сила импульса: от почти не хочется до очень хочется"
           />
 
           <div class="anchors" aria-hidden="true">
-            <span>Почти не тянуло</span>
-            <span>Как приказ</span>
+            <span>Почти не хочется</span>
+            <span>Очень хочется</span>
           </div>
         </article>
 
-        <article class="measure" data-measure="choice">
+        <article class="measure" data-measure="importance">
           <div class="measure-head">
             <div>
-              <p class="measure-title">Личный выбор</p>
-              <p class="measure-question">Что определило твой следующий шаг?</p>
+              <p class="measure-title">Важность</p>
+              <p class="measure-question">Насколько важно следовать за ним?</p>
             </div>
-            <output class="value" id="value-choice" for="choice">—</output>
+            <output class="value" id="value-importance" for="importance">—</output>
           </div>
 
           <input
-            id="choice"
-            name="choice"
+            id="importance"
+            name="importance"
             type="range"
             min="0"
             max="10"
-            step="0.5"
+            step="1"
             value="5"
-            aria-label="Источник следующего шага: от надо сейчас до моего выбора"
+            aria-label="Важность следования импульсу: от неважно до очень важно"
           />
 
           <div class="anchors" aria-hidden="true">
-            <span>На автомате</span>
-            <span>Мой выбор</span>
+            <span>Неважно</span>
+            <span>Очень важно</span>
           </div>
         </article>
       </section>
 
       <footer class="footer">
-        <button class="send" id="send" type="submit" disabled>Отправить</button>
+        <button class="send" id="send" type="submit" disabled>Сохранить</button>
       </footer>
     </form>
 
     <section class="success" id="success" hidden aria-live="polite">
       <div>
         <div class="success-mark" aria-hidden="true">✓</div>
-        <h2>Отметка отправлена</h2>
-        <p>Можно возвращаться в Telegram.</p>
+        <h2>Момент сохранён</h2>
+        <p>Можно продолжить.</p>
       </div>
     </section>
   </main>
@@ -428,37 +429,37 @@
       const FORM_DEFINITION = {
         schemaVersion: 2,
         id: "psychological-flexibility-daily",
-        version: "1",
+        version: "2",
         focus: {
           id: "psychological-flexibility",
           label: "Импульс и выбор"
         },
         entryType: "scales",
-        timeframe: "last_noticeable_moment",
+        timeframe: "present_moment",
         metrics: [
           {
-            id: "command_strength",
+            id: "urge_pull",
             type: "scale",
-            label: "Сила желания",
-            prompt: "Насколько сильным было желание?",
+            label: "Сила импульса",
+            prompt: "Как сильно хочется следовать за импульсом?",
             min: 0,
             max: 10,
-            step: 0.5,
-            construct: "urge_strength",
-            direction: "higher_means_stronger_urge",
-            anchors: { min: "Почти не тянуло", max: "Как приказ" }
+            step: 1,
+            construct: "urge_following_pull",
+            direction: "higher_means_stronger_pull_to_follow",
+            anchors: { min: "Почти не хочется", max: "Очень хочется" }
           },
           {
-            id: "personal_choice",
+            id: "following_importance",
             type: "scale",
-            label: "Личный выбор",
-            prompt: "Что определило твой следующий шаг?",
+            label: "Важность",
+            prompt: "Насколько важно следовать за ним?",
             min: 0,
             max: 10,
-            step: 0.5,
-            construct: "values_based_choice",
-            direction: "higher_means_more_choice",
-            anchors: { min: "На автомате", max: "Мой выбор" }
+            step: 1,
+            construct: "perceived_importance_of_following",
+            direction: "higher_means_more_important_to_follow",
+            anchors: { min: "Неважно", max: "Очень важно" }
           }
         ]
       };
@@ -494,12 +495,12 @@
       applyAccent(accentParam);
 
       const state = {
-        command: null,
-        choice: null
+        pull: null,
+        importance: null
       };
       const inputByMetric = {
-        command_strength: "command",
-        personal_choice: "choice"
+        urge_pull: "pull",
+        following_importance: "importance"
       };
       const send = document.getElementById("send");
       const form = document.getElementById("moment-form");
@@ -510,7 +511,7 @@
       }
 
       function updateSubmit() {
-        send.disabled = state.command === null || state.choice === null;
+        send.disabled = state.pull === null || state.importance === null;
       }
 
       function showSuccess() {
@@ -580,7 +581,7 @@
 
         send.disabled = true;
         send.setAttribute("aria-busy", "true");
-        send.textContent = "Отправляем…";
+        send.textContent = "Сохраняем…";
 
         try {
           if (!tg?.initData) {
@@ -617,7 +618,6 @@
 
           tg?.HapticFeedback?.notificationOccurred("success");
           showSuccess();
-          // Keep the confirmation visible briefly before returning to Telegram.
           window.setTimeout(() => tg?.close?.(), 1300);
         } catch (error) {
           console.error(error);
@@ -636,7 +636,7 @@
       };
 
       if (params.get("populate") === "1") {
-        const demo = { command: 7.5, choice: 7 };
+        const demo = { pull: 7, importance: 6 };
         Object.entries(demo).forEach(([name, value]) => {
           const input = document.getElementById(name);
           input.value = value;
