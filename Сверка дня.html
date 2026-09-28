@@ -361,7 +361,7 @@
           <div class="measure-head">
             <div>
               <p class="measure-title">Сила импульса</p>
-              <p class="measure-question">Как сильно хочется следовать за импульсом?</p>
+              <p class="measure-question">Как сильно меня сейчас тянет это сделать?</p>
             </div>
             <output class="value" id="value-pull" for="pull">—</output>
           </div>
@@ -378,16 +378,16 @@
           />
 
           <div class="anchors" aria-hidden="true">
-            <span>Почти не хочется</span>
-            <span>Очень хочется</span>
+            <span>Почти не тянет</span>
+            <span>Полностью захватывает</span>
           </div>
         </article>
 
         <article class="measure" data-measure="importance">
           <div class="measure-head">
             <div>
-              <p class="measure-title">Важность</p>
-              <p class="measure-question">Насколько важно следовать за ним?</p>
+              <p class="measure-title">Направление</p>
+              <p class="measure-question">Если я последую этому импульсу, насколько это приблизит меня к важному для меня?</p>
             </div>
             <output class="value" id="value-importance" for="importance">—</output>
           </div>
@@ -404,8 +404,8 @@
           />
 
           <div class="anchors" aria-hidden="true">
-            <span>Неважно</span>
-            <span>Очень важно</span>
+            <span>Уведёт от важного</span>
+            <span>Значительно приблизит</span>
           </div>
         </article>
       </section>
@@ -441,25 +441,25 @@
             id: "urge_pull",
             type: "scale",
             label: "Сила импульса",
-            prompt: "Как сильно хочется следовать за импульсом?",
+            prompt: "Как сильно меня сейчас тянет это сделать?",
             min: 0,
             max: 10,
             step: 1,
             construct: "urge_following_pull",
             direction: "higher_means_stronger_pull_to_follow",
-            anchors: { min: "Почти не хочется", max: "Очень хочется" }
+            anchors: { min: "Почти не тянет", max: "Полностью захватывает" }
           },
           {
             id: "following_importance",
             type: "scale",
-            label: "Важность",
-            prompt: "Насколько важно следовать за ним?",
+            label: "Направление",
+            prompt: "Если я последую этому импульсу, насколько это приблизит меня к важному для меня?",
             min: 0,
             max: 10,
             step: 1,
-            construct: "perceived_importance_of_following",
-            direction: "higher_means_more_important_to_follow",
-            anchors: { min: "Неважно", max: "Очень важно" }
+            construct: "values_alignment_of_following",
+            direction: "higher_means_more_values_aligned",
+            anchors: { min: "Уведёт от важного", max: "Значительно приблизит" }
           }
         ]
       };
