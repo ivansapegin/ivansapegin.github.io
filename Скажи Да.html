@@ -4,17 +4,100 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="dark">
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://telegram.org; style-src 'unsafe-inline'; connect-src https://app.notion.com; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline' https://telegram.org; style-src 'unsafe-inline'; connect-src https://63317226416.webhook.notionusercontent.com; base-uri 'none'; form-action 'none'">
 <title>Скажи «Да!»</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
-:root{color-scheme:dark;--canvas:#191919;--surface:#202020;--soft:#292929;--ink:#f5f5f3;--muted:#b3b7bc;--line:#4d4d4b;--input-line:#858b91;--accent:#82b8f0;--accent-hover:#a0caf4;--tint:#253443;--on-accent:#14283b;--disabled-bg:#353838;--disabled-ink:#bcc1c5;--orb-rgb:130,184,240;--core:#2d4f6c;--orb-label:#dfedf9;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;font-size:16px;line-height:1.5;color:var(--ink);background:var(--canvas);-webkit-text-size-adjust:100%}
-*{box-sizing:border-box}[hidden]{display:none!important}body{margin:0}button,textarea,input{font:inherit}button{cursor:pointer;-webkit-tap-highlight-color:transparent}button:disabled{cursor:default}button:focus-visible,textarea:focus-visible,input:focus-visible{outline:3px solid var(--accent);outline-offset:4px}::selection{background:var(--core);color:var(--ink)}
-.app{width:min(520px,calc(100% - 32px));margin:24px auto;padding-bottom:env(safe-area-inset-bottom,0);transition:opacity .3s ease}.app.closing{opacity:0;pointer-events:none}.brand-row{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:44px;margin-bottom:16px}.brand{display:flex;align-items:center;gap:10px}.brand-mark{color:var(--accent);width:28px;height:28px;flex-shrink:0}.brand-name{display:block;font-size:14px;font-weight:700;letter-spacing:.11em}.brand-title{display:block;font-size:16px;font-weight:500;line-height:1.4}.prototype-label{color:var(--muted);font-size:14px;white-space:nowrap}.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:0;margin:0 0 20px;list-style:none}.steps li{color:var(--muted);font-size:14px;padding-top:9px;border-top:3px solid var(--line)}.steps li.current{color:var(--accent);font-weight:600}.steps li.current,.steps li.complete{border-top-color:var(--accent)}.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:24px;box-shadow:0 1px 2px rgba(0,0,0,.025)}h1{margin:0 0 12px;font-size:28px;line-height:1.22;letter-spacing:-.025em;font-weight:650}h1:focus{outline:none}p{margin:0}.intro{color:var(--muted);margin-bottom:24px}.field-label{display:block;font-weight:600;margin-bottom:8px}textarea{display:block;width:100%;min-height:140px;max-height:300px;resize:vertical;padding:14px 16px;border:1px solid var(--input-line);border-radius:8px;background:var(--surface);color:var(--ink);line-height:1.6}textarea::placeholder{color:var(--muted);opacity:1}.nav{display:flex;margin-top:24px}.button{min-height:48px;width:100%;border:1px solid transparent;border-radius:8px;padding:12px 18px;font-weight:600;line-height:1.35;background:var(--accent);color:var(--on-accent)}.button:hover:not(:disabled){background:var(--accent-hover)}.button:disabled{background:var(--disabled-bg);color:var(--disabled-ink)}.reflection{margin:0;border-left:3px solid rgba(var(--orb-rgb),.3);border-radius:0 8px 8px 0;padding:12px 16px;background:var(--soft)}.reflection-label{display:block;font-size:14px;color:var(--muted);margin-bottom:4px}.reflection-text{white-space:pre-wrap;overflow-wrap:anywhere;max-height:120px;overflow-y:auto;scrollbar-width:thin}.breath-view .intro{margin-bottom:16px}.breath-layout{display:flex;flex-direction:column;align-items:center;margin-top:24px}.orb-stage{width:216px;height:216px;position:relative;display:grid;place-items:center;isolation:isolate}.orb-outer,.orb-middle,.orb-core{position:absolute;border-radius:50%}.orb-outer{inset:0;background:rgba(var(--orb-rgb),.1)}.orb-middle{inset:0;background:rgba(var(--orb-rgb),.05);transform:scale(.58);will-change:transform}.orb-core{inset:25%;background:var(--core)}.orb-copy{position:relative;width:108px;text-align:center;color:var(--orb-label)}.phase{display:block;font-size:20px;font-weight:600;line-height:1.3}.cycle{display:block;font-size:14px;margin-top:5px}.breath-note{min-height:63px;max-width:350px;margin-top:20px;text-align:center;color:var(--muted);font-size:14px}.breath-note:empty{display:none}.breath-view .nav{margin-top:20px}.scale-card{border:1px solid var(--input-line);border-radius:12px;padding:20px;margin-top:24px}.scale-heading{display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-bottom:8px}.scale-heading label{font-size:20px;font-weight:600}.rating-value{font-size:26px;font-weight:600;line-height:1.2;min-width:32px;text-align:right;color:var(--ink)}.scale-card[data-chosen=true] .rating-value{color:var(--accent)}.scale-question{margin-bottom:20px;color:var(--ink)}.range{--fill:44.444%;display:block;width:100%;height:44px;margin:0;padding:0;appearance:none;-webkit-appearance:none;background:transparent;border:0;border-radius:8px;cursor:pointer;touch-action:pan-y}.range::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--input-line)}.range::-moz-range-track{height:6px;border-radius:3px;background:var(--input-line)}.range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:28px;height:28px;margin-top:-11px;border-radius:50%;border:2px solid var(--input-line);background:var(--surface)}.range::-moz-range-thumb{width:24px;height:24px;border-radius:50%;border:2px solid var(--input-line);background:var(--surface)}.scale-card[data-chosen=true] .range::-webkit-slider-runnable-track{background:linear-gradient(to right,var(--accent) 0 var(--fill),var(--input-line) var(--fill) 100%)}.scale-card[data-chosen=true] .range::-webkit-slider-thumb{border-color:var(--accent);background:var(--accent)}.scale-card[data-chosen=true] .range::-moz-range-thumb{border-color:var(--accent);background:var(--accent)}.scale-card[data-chosen=true] .range::-moz-range-progress{height:6px;border-radius:3px;background:var(--accent)}.scale-anchors{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:8px;color:var(--muted);font-size:14px}.scale-anchors p:last-child{text-align:right}.done{text-align:center;padding:24px 0}.done-symbol{display:grid;place-items:center;width:56px;height:56px;margin:0 auto 20px;background:var(--tint);color:var(--accent);border-radius:12px}.done-symbol svg{width:32px;height:32px}.done h1{margin-bottom:0}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-@media(max-width:480px){.app{margin:16px auto}.card{padding:20px}h1{font-size:26px}.intro{margin-bottom:20px}.nav{margin-top:20px}.scale-card{padding:16px}}
-@media(max-width:360px){.app{width:calc(100% - 24px)}.card{padding:16px}.steps{gap:8px}h1{font-size:25px}.scale-card{padding:14px}.scale-anchors{gap:12px}.brand-row{gap:8px}}
+:root{
+  color-scheme:dark;
+  --canvas:#191919;--surface:#202020;--field:#1c1e20;--soft:#292b2d;
+  --ink:#f5f5f3;--muted:#b3b9bf;--line:#3d4247;--input-line:#808991;
+  --accent:#82b8f0;--accent-hover:#9cc8f5;--tint:#253443;--on-accent:#14283b;
+  --disabled-bg:#34383b;--disabled-ink:#b5bdc4;
+  --orb-rgb:130,184,240;--core:#2d4f6c;--orb-label:#dfedf9;
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;
+  font-size:16px;line-height:1.55;color:var(--ink);background:var(--canvas);
+  -webkit-text-size-adjust:100%;font-synthesis:none;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0}
+button,textarea,input{font:inherit}
+button{cursor:pointer;-webkit-tap-highlight-color:transparent}
+button:disabled{cursor:default}
+button:focus-visible,textarea:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+::selection{background:var(--core);color:var(--ink)}
+.app{width:min(520px,calc(100% - 32px));margin:24px auto;padding-bottom:env(safe-area-inset-bottom,0px);transition:opacity .3s ease}
+.app.closing{opacity:0;pointer-events:none}
+.brand-row{display:flex;align-items:center;min-height:44px;margin-bottom:20px}
+.brand{display:flex;align-items:center;gap:12px}
+.brand-mark{width:28px;height:28px;flex-shrink:0;color:var(--accent)}
+.brand-name{display:block;font-size:14px;line-height:1.4;font-weight:700;letter-spacing:.1em}
+.brand-title{display:block;margin-top:2px;font-size:16px;line-height:1.4;font-weight:500}
+.steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));align-items:start;gap:12px;min-height:34px;padding:0;margin:0 0 24px;list-style:none}
+.steps li{min-width:0;padding-top:10px;border-top:2px solid var(--line);color:var(--muted);font-size:14px;line-height:1.45;font-weight:500}
+.steps li.current{color:var(--accent);font-weight:600}
+.steps li.current,.steps li.complete{border-top-color:var(--accent)}
+.card{display:grid;padding:28px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.card>[data-view]{grid-area:1 / 1;min-width:0;display:flex;flex-direction:column}
+.card>[data-view][hidden]{display:flex!important;visibility:hidden!important;pointer-events:none}
+h1{margin:0;font-size:28px;line-height:1.22;letter-spacing:-.025em;font-weight:650;overflow-wrap:break-word;text-wrap:pretty}
+h1:focus{outline:none}
+p{margin:0}
+.intro{margin:12px 0 24px;color:var(--muted);font-size:16px;line-height:1.55;text-wrap:pretty}
+#entry-form{display:flex;flex:1;flex-direction:column;min-height:0}
+.field-label{display:block;margin-bottom:8px;font-size:16px;font-weight:600;line-height:1.5}
+textarea{display:block;flex:1;width:100%;min-height:200px;resize:none;padding:16px;border:1px solid var(--input-line);border-radius:8px;background:var(--field);color:var(--ink);font-size:16px;line-height:1.65;scrollbar-width:thin;scrollbar-color:var(--input-line) transparent;transition:border-color .15s ease}
+textarea::placeholder{color:var(--muted);opacity:1}
+textarea:focus{border-color:var(--accent)}
+.nav{display:flex;flex-shrink:0;margin-top:24px}
+#entry-form>.nav{margin-top:24px}
+.button{width:100%;min-height:52px;padding:14px 20px;border:1px solid transparent;border-radius:8px;background:var(--accent);color:var(--on-accent);font-size:16px;font-weight:600;line-height:1.35;transition:background .15s ease,border-color .15s ease}
+@media(hover:hover){.button:hover:not(:disabled){background:var(--accent-hover)}}
+.button:active:not(:disabled){background:#74abe4}
+.button:disabled{background:var(--disabled-bg);color:var(--disabled-ink)}
+.reflection{margin:0;padding:12px 16px;border-left:2px solid rgba(var(--orb-rgb),.45);border-radius:0 8px 8px 0;background:var(--soft)}
+.reflection-label{display:block;margin-bottom:4px;color:var(--muted);font-size:14px;line-height:1.5}
+.reflection-text{min-height:25px;max-height:124px;overflow-y:auto;white-space:pre-wrap;overflow-wrap:anywhere;font-size:16px;line-height:1.55;scrollbar-width:thin;scrollbar-color:var(--input-line) transparent}
+.breath-layout{display:flex;flex:1;flex-direction:column;justify-content:center;align-items:center;min-width:0;padding-block:24px}
+.orb-stage{position:relative;display:grid;place-items:center;isolation:isolate;flex-shrink:0;width:min(300px,100%);aspect-ratio:1}
+.orb-outer,.orb-middle,.orb-core{position:absolute;border-radius:50%}
+.orb-outer{inset:0;background:rgba(var(--orb-rgb),.1)}
+.orb-middle{inset:0;background:rgba(var(--orb-rgb),.05);transform:scale(.42);will-change:transform}
+.orb-core{inset:calc(50% - 54px);background:var(--core)}
+.orb-copy{position:relative;width:108px;text-align:center;color:var(--orb-label)}
+.phase{display:block;font-size:20px;font-weight:600;line-height:1.3;letter-spacing:-.01em}
+.cycle{display:block;margin-top:6px;font-size:14px;line-height:1.4;font-variant-numeric:tabular-nums;color:#d2e3f3}
+.breath-view>.nav{margin-top:0}
+[data-view="3"]>h1{margin-bottom:24px}
+.scale-card{margin-block:auto;padding:24px;border:1px solid #525c65;border-radius:12px;background:#222629}
+.scale-heading{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:12px}
+.scale-heading label{font-size:20px;font-weight:600;line-height:1.4;letter-spacing:-.01em}
+.rating-value{min-width:36px;color:var(--muted);font-size:28px;font-weight:600;line-height:1.15;text-align:right;font-variant-numeric:tabular-nums}
+.scale-card[data-chosen=true] .rating-value{color:var(--accent)}
+.scale-question{margin-bottom:20px;font-size:16px;line-height:1.55}
+.range{--fill:44.444%;display:block;width:100%;height:48px;margin:0;padding:0;appearance:none;-webkit-appearance:none;background:transparent;border:0;border-radius:8px;cursor:pointer;touch-action:pan-y}
+.range::-webkit-slider-runnable-track{height:6px;border-radius:3px;background:var(--input-line)}
+.range::-moz-range-track{height:6px;border-radius:3px;background:var(--input-line)}
+.range::-webkit-slider-thumb{appearance:none;-webkit-appearance:none;width:30px;height:30px;margin-top:-12px;border:2px solid var(--input-line);border-radius:50%;background:var(--surface)}
+.range::-moz-range-thumb{width:26px;height:26px;border:2px solid var(--input-line);border-radius:50%;background:var(--surface)}
+.scale-card[data-chosen=true] .range::-webkit-slider-runnable-track{background:linear-gradient(to right,var(--accent) 0 var(--fill),var(--input-line) var(--fill) 100%)}
+.scale-card[data-chosen=true] .range::-webkit-slider-thumb{border-color:var(--accent);background:var(--accent)}
+.scale-card[data-chosen=true] .range::-moz-range-thumb{border-color:var(--accent);background:var(--accent)}
+.scale-card[data-chosen=true] .range::-moz-range-progress{height:6px;border-radius:3px;background:var(--accent)}
+.scale-anchors{display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:8px;color:var(--muted);font-size:14px;line-height:1.45}
+.scale-anchors p{max-width:112px;text-wrap:balance}
+.scale-anchors p:last-child{justify-self:end;text-align:right}
+.done{justify-content:center;align-items:center;padding-block:24px;text-align:center}
+.done-symbol{display:grid;place-items:center;width:56px;height:56px;margin-bottom:24px;border-radius:12px;background:var(--tint);color:var(--accent)}
+.done-symbol svg{width:32px;height:32px}
+.done>p{color:var(--muted);font-size:16px;line-height:1.55}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+@media(min-width:600px){.app{margin-block:32px}}
+@media(max-width:480px){.app{margin-block:16px}.card{padding:20px}h1{font-size:26px}.scale-card{padding:20px}}
+@media(max-width:360px){.card{padding:16px}h1{font-size:24px;line-height:1.25}.steps{gap:8px;min-height:54px}.scale-card{padding:16px}.scale-anchors{gap:16px}}
+@media(max-height:760px) and (max-width:480px){.app{margin-block:12px}.brand-row{margin-bottom:16px}.steps{margin-bottom:16px}.orb-stage{width:min(238px,100%)}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{transition:none!important}.orb-middle{will-change:auto}}
-
 </style>
 </head>
 <body>
@@ -23,7 +106,7 @@
 <ol class="steps" aria-label="Этапы практики"><li data-progress="1" class="current" aria-current="step">1. Заметить</li><li data-progress="2">2. Дать место</li><li data-progress="3">3. Открыться</li></ol>
 <article class="card">
 <section data-view="1" aria-labelledby="title-1"><h1 id="title-1" tabindex="-1">Поделись своими чувствами</h1><p class="intro">Что сейчас происходит внутри? Можно назвать чувства и ощущения в теле.</p><form id="entry-form" autocomplete="off"><label class="field-label" for="feelings">Сейчас во мне есть…</label><textarea id="feelings" name="feelings" rows="4" maxlength="1200" autocomplete="off" spellcheck="false" placeholder="Например: тревога, усталость, тепло в ладонях…"></textarea><div class="nav"><button class="button" id="entry-next" type="submit" disabled>Далее</button></div></form></section>
-<section data-view="2" class="breath-view" aria-labelledby="title-2" hidden><h1 id="title-2" tabindex="-1">Дай этому немного места</h1><p class="intro">Дыши и замечай переживание. На каждом выдохе позволь ему быть таким, какое оно сейчас.</p><blockquote class="reflection"><span class="reflection-label">Сейчас во мне есть…</span><div class="reflection-text" id="reflection"></div></blockquote><div class="breath-layout"><div class="orb-stage"><div class="orb-outer" id="orb-outer" aria-hidden="true"></div><div class="orb-middle" id="orb-middle" aria-hidden="true"></div><div class="orb-core" id="orb-core" aria-hidden="true"></div><div class="orb-copy"><span class="phase" id="phase" role="status" aria-live="polite">Вдох</span><span class="cycle" id="cycle">1/3</span></div></div><p class="breath-note" id="breath-note" aria-live="polite"></p></div><div class="nav"><button class="button" id="breath-next" type="button">Далее</button></div></section>
+<section data-view="2" class="breath-view" aria-labelledby="title-2" hidden><h1 id="title-2" tabindex="-1">Дай этому немного места</h1><p class="intro">Дыши и замечай переживание. На каждом выдохе позволь ему быть таким, какое оно сейчас.</p><blockquote class="reflection"><span class="reflection-label">Сейчас во мне есть…</span><div class="reflection-text" id="reflection"></div></blockquote><div class="breath-layout"><div class="orb-stage"><div class="orb-outer" id="orb-outer" aria-hidden="true"></div><div class="orb-middle" id="orb-middle" aria-hidden="true"></div><div class="orb-core" id="orb-core" aria-hidden="true"></div><div class="orb-copy"><span class="phase" id="phase" role="status" aria-live="polite">Вдох</span><span class="cycle" id="cycle">1/3</span></div></div></div><div class="nav"><button class="button" id="breath-next" type="button">Далее</button></div></section>
 <section data-view="3" aria-labelledby="title-3" hidden><h1 id="title-3" tabindex="-1">Открыться этому опыту</h1><div class="scale-card" id="scale-card" data-chosen="false"><div class="scale-heading"><label for="readiness">Готовность</label><output class="rating-value" id="rating-value" for="readiness" aria-live="polite">—</output></div><p class="scale-question" id="scale-question">Насколько ты готов(а) дать этим чувствам место сейчас?</p><input class="range" id="readiness" type="range" min="1" max="10" step="1" value="5" aria-valuetext="Готовность ещё не выбрана" aria-describedby="scale-question scale-anchors"><div class="scale-anchors" id="scale-anchors"><p>Совсем не готов(а)</p><p>Полностью готов(а)</p></div></div><div class="nav"><button class="button" id="finish" type="button" disabled>Записать практику</button></div></section>
 <section data-view="4" class="done" aria-labelledby="title-4" hidden><div class="done-symbol" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><circle cx="16" cy="16" r="12" stroke="currentColor" stroke-width="1.5"/><path d="m10.5 16 3.8 3.8 7.2-7.6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h1 id="title-4" tabindex="-1">Отметка отправлена</h1><p style="margin-top:12px">Можно возвращаться в Telegram.</p></section>
 </article>
@@ -33,19 +116,19 @@
 <script>
 (()=>{'use strict';
 const tg=window.Telegram?.WebApp;
-const submitUrl='https://app.notion.com/webhooks/worker/09565f83-953a-40af-a7e6-84448d2d71db/01a0cab3-b06e-7ca8-9748-7df44db37aa1/hmeSFjx_CM2tPVXx/telegramIncoming';
+const submitUrl='https://63317226416.webhook.notionusercontent.com/webhooks/worker/09565f83-953a-40af-a7e6-84448d2d71db/01a0cab3-b06e-7ca8-9748-7df44db37aa1/hmeSFjx_CM2tPVXx/telegramIncoming';
 const submissionId=window.crypto?.randomUUID?.()??`${Date.now()}-${Math.random().toString(36).slice(2)}`;
 tg?.ready();tg?.expand();
 const $=id=>document.getElementById(id),state={step:1,rating:null,answer:'',closed:false},breath={running:false,elapsed:0,start:0,frame:0};
 const reduce=matchMedia('(prefers-reduced-motion: reduce)'),IN=4000,OUT=5000,CYCLE=IN+OUT,TOTAL=CYCLE*3;let closeTimer=0,hideTimer=0;
 function middle(scale){$('orb-middle').style.transform=`scale(${reduce.matches?.75:scale})`}
 function stopBreath(){if(breath.running)breath.elapsed=Math.min(TOTAL,performance.now()-breath.start);breath.running=false;cancelAnimationFrame(breath.frame);breath.frame=0}
-function render(now){if(!breath.running)return;breath.elapsed=Math.min(TOTAL,now-breath.start);if(breath.elapsed>=TOTAL){breath.running=false;breath.frame=0;middle(.58);$('phase').textContent='Готово';$('cycle').textContent='3/3';$('breath-note').textContent='Теперь отметь, насколько ты готов(а) дать этим чувствам место.';$('breath-next').textContent='Отметить готовность';return}const cycle=Math.floor(breath.elapsed/CYCLE)+1,t=breath.elapsed%CYCLE,inhale=t<IN,p=inhale?t/IN:(t-IN)/OUT,e=.5-Math.cos(p*Math.PI)/2;middle(inhale?.58+.42*e:1-.42*e);const phase=inhale?'Вдох':'Выдох';if($('phase').textContent!==phase)$('phase').textContent=phase;$('cycle').textContent=`${cycle}/3`;breath.frame=requestAnimationFrame(render)}
+function render(now){if(!breath.running)return;breath.elapsed=Math.min(TOTAL,now-breath.start);if(breath.elapsed>=TOTAL){breath.running=false;breath.frame=0;middle(.42);$('phase').textContent='Готово';$('cycle').textContent='3/3';$('breath-next').textContent='Отметить готовность';return}const cycle=Math.floor(breath.elapsed/CYCLE)+1,t=breath.elapsed%CYCLE,inhale=t<IN,p=inhale?t/IN:(t-IN)/OUT,e=.5-Math.cos(p*Math.PI)/2;middle(inhale?.42+.58*e:1-.58*e);const phase=inhale?'Вдох':'Выдох';if($('phase').textContent!==phase)$('phase').textContent=phase;$('cycle').textContent=`${cycle}/3`;breath.frame=requestAnimationFrame(render)}
 function startBreath(){if(breath.running||breath.elapsed>=TOTAL||document.hidden)return;breath.running=true;breath.start=performance.now()-breath.elapsed;render(performance.now())}
-function show(step,focus=true){if(state.step===2&&step!==2)stopBreath();state.step=step;document.querySelectorAll('[data-view]').forEach(el=>el.hidden=Number(el.dataset.view)!==step);document.querySelectorAll('[data-progress]').forEach(el=>{const n=Number(el.dataset.progress);el.classList.toggle('current',n===step);el.classList.toggle('complete',n<step);if(n===step)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current')});if(step===2){$('reflection').textContent=state.answer;startBreath()}if(focus){$('title-'+step).focus({preventScroll:true});window.scrollTo(0,0)}}
-function reset(){clearTimeout(closeTimer);clearTimeout(hideTimer);stopBreath();breath.elapsed=0;state.answer='';state.rating=null;state.closed=false;$('entry-form').reset();$('feelings').value='';$('reflection').textContent='';$('entry-next').disabled=true;$('finish').disabled=true;$('readiness').value='5';$('readiness').style.setProperty('--fill','44.444%');$('readiness').setAttribute('aria-valuetext','Готовность ещё не выбрана');$('rating-value').textContent='—';$('scale-card').dataset.chosen='false';$('phase').textContent='Вдох';$('cycle').textContent='1/3';middle(.58);$('breath-note').textContent='';$('breath-next').textContent='Далее';$('app').hidden=false;$('app').classList.remove('closing');$('closed-status').textContent='';show(1,false)}
+function show(step,focus=true){if(state.step===2&&step!==2)stopBreath();state.step=step;document.querySelectorAll('[data-view]').forEach(el=>{const inactive=Number(el.dataset.view)!==step;el.hidden=inactive;el.inert=inactive;el.setAttribute('aria-hidden',String(inactive))});document.querySelectorAll('[data-progress]').forEach(el=>{const n=Number(el.dataset.progress);el.classList.toggle('current',n===step);el.classList.toggle('complete',n<step);if(n===step)el.setAttribute('aria-current','step');else el.removeAttribute('aria-current')});if(step===2){$('reflection').textContent=state.answer;startBreath()}const card=document.querySelector('.card');card.style.minHeight=card.getBoundingClientRect().height+'px';if(focus){$('title-'+step).focus({preventScroll:true});window.scrollTo(0,0)}}
+function reset(){clearTimeout(closeTimer);clearTimeout(hideTimer);stopBreath();breath.elapsed=0;state.answer='';state.rating=null;state.closed=false;$('entry-form').reset();$('feelings').value='';$('reflection').textContent='';$('entry-next').disabled=true;$('finish').disabled=true;$('readiness').value='5';$('readiness').style.setProperty('--fill','44.444%');$('readiness').setAttribute('aria-valuetext','Готовность ещё не выбрана');$('rating-value').textContent='—';$('scale-card').dataset.chosen='false';$('phase').textContent='Вдох';$('cycle').textContent='1/3';middle(.42);$('breath-next').textContent='Далее';$('app').hidden=false;$('app').classList.remove('closing');$('closed-status').textContent='';show(1,false)}
 function syncRating(){state.rating=Number($('readiness').value);$('rating-value').textContent=String(state.rating);$('readiness').setAttribute('aria-valuetext',`${state.rating} из 10`);$('readiness').style.setProperty('--fill',`${(state.rating-1)/9*100}%`);$('scale-card').dataset.chosen='true';$('finish').disabled=false}
-$('feelings').addEventListener('input',()=>{$('entry-next').disabled=!$('feelings').value.trim()});$('entry-form').addEventListener('submit',e=>{e.preventDefault();state.answer=$('feelings').value;if(state.answer.trim())show(2)});$('breath-next').addEventListener('click',()=>show(3));$('readiness').addEventListener('input',syncRating);$('readiness').addEventListener('change',syncRating);$('readiness').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();syncRating()}});
+$('feelings').addEventListener('input',()=>{$('entry-next').disabled=!$('feelings').value.trim();$('reflection').textContent=$('feelings').value});$('entry-form').addEventListener('submit',e=>{e.preventDefault();state.answer=$('feelings').value;if(state.answer.trim())show(2)});$('breath-next').addEventListener('click',()=>show(3));$('readiness').addEventListener('input',syncRating);$('readiness').addEventListener('change',syncRating);$('readiness').addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();syncRating()}});
 $('finish').addEventListener('click',async()=>{
 if(state.rating===null||state.closed)return;
 const button=$('finish');button.disabled=true;button.setAttribute('aria-busy','true');button.textContent='Сохраняем…';
@@ -57,6 +140,7 @@ try{await fetch(submitUrl,{method:'POST',mode:'no-cors',credentials:'omit',cache
 state.closed=true;show(4);tg?.HapticFeedback?.notificationOccurred('success');state.answer='';state.rating=null;$('feelings').value='';$('reflection').textContent='';closeTimer=setTimeout(()=>tg?.close?.(),1300);hideTimer=setTimeout(()=>{$('app').classList.add('closing')},1500);
 }catch(error){console.error(error);button.disabled=false;button.removeAttribute('aria-busy');button.textContent='Повторить';tg?.HapticFeedback?.notificationOccurred('error');tg?.showAlert?.('Не удалось отправить запись. Проверь соединение и попробуй ещё раз.')}
 });
+window.addEventListener('resize',()=>{document.querySelector('.card').style.minHeight='';});
 document.addEventListener('visibilitychange',()=>{if(document.hidden)stopBreath();else if(state.step===2)startBreath()});window.addEventListener('pagehide',()=>reset());window.addEventListener('pageshow',e=>{if(e.persisted)reset()});reduce.addEventListener('change',()=>middle(.75));reset();
 })();
 </script>
